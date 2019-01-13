@@ -140,6 +140,8 @@ def hn_show():
                 elif Industry_type2 == "高流量":
                     Industry_type2 = "hotsearch"
             IPS = BI.Store_ranking(cateid,Industry_type2,Industry_type)
+            ips = list(IPS.values())
+            dates = list(IPS.keys())
             dic = {}
             if request.form.get("data1") or request.form.get("data2") or request.form.get("data3") or request.form.get("data4") or request.form.get("data5") or request.form.get("data6") or request.form.get("data7") or request.form.get("data8") or request.form.get("data9") or request.form.get("data10") or request.form.get("data11") or request.form.get("data12"):
                 for x in range(1,13):
