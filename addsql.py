@@ -17,18 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI']="mysql://root:123456@localhost/bi"
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN']=True
 app.config['SECRET_KEY']="SASDAS"
 db = SQLAlchemy(app)
-
-class Subindustry_Distribution2(db.Model):
-    __tablename__ = 'subindustry_distribution2'
-    id = db.Column(db.Integer, primary_key=True)
-    cateID = db.Column(db.String(40))
-    Data_module = db.Column(db.String(40))
-    date = db.Column(db.String(40))
-    cateName = db.Column(db.String(40))
-    slrCnt = db.Column(db.String(40))
-    parentCateSlrRate = db.Column(db.String(40))
-    tradeSlrCnt = db.Column(db.String(40))
-    parentCateTradeSlrCntRate = db.Column(db.String(40))
+# 行业构成
 class Industry_composition(db.Model):
     __tablename__ = 'industry_composition'
     id = db.Column(db.Integer, primary_key=True)
@@ -182,17 +171,7 @@ class Brand_hotsale(db.Model):
     tradeIndex = db.Column(db.String(40))
     Conversion_rate = db.Column(db.String(40))
     Payment_amount = db.Column(db.String(40))
-# # #热门属性表
-class Hot_attributes(db.Model):
-    __tablename__ = 'hot_attributes'
-    id = db.Column(db.Integer, primary_key=True)
-    cateID = db.Column(db.String(40))
-    Data_module = db.Column(db.String(40))
-    data_type = db.Column(db.String(40))
-    date = db.Column(db.String(40))
-    payments_piece = db.Column(db.String(40))
-    tradeIndex = db.Column(db.String(40))
-    Sale = db.Column(db.String(40))
+
 # # #搜索词排行表
 class Search_terms(db.Model):
     __tablename__ = 'search_terms'
@@ -584,103 +563,253 @@ class Brand_Gender_Clients_two(db.Model):
     text = db.Column(db.String(40))
     Conversion_Rate = db.Column(db.String(40))
 
+# # #热门属性表
+class Hot_attributes(db.Model):
+    __tablename__ = 'hot_attributes'
+    id = db.Column(db.Integer, primary_key=True)
+    cateID = db.Column(db.String(40))
+    Data_module = db.Column(db.String(40))
+    data_type = db.Column(db.String(40))
+    date = db.Column(db.String(40))
+    attribute_name = db.Column(db.String(40))
+    payments_piece = db.Column(db.String(40))
+    tradeIndex = db.Column(db.String(40))
+    Sale = db.Column(db.String(40))
 db.create_all()
-"""行业构成查看函数"""
-def Industry_compositionc():
-    data = Industry_composition.query.all()
+
+"""查看函数"""
+# 行业构成
+def Industry_composition_show(data,dtype):
+    if dtype == "cateid":
+        data = Industry_composition.query.filter_by(cateID=data).all()
+    elif dtype == "cateName":
+        data = Industry_composition.query.filter_by(cateName=data).all()
+    form = []
     for x in data:
-        print(x.cateID)
-        print(x.Industry_composition)
-        print(x.date)
-        print(x.cateName)
-        print(x.tradeIndex)
-        print(x.tradeGrowthRange)
-        print(x.payAmtParentCateRate)
-        print(x.payCntParentCateRate)
-        print(x.Payment_amount)
+        text = []
+        text.append(x.cateID)
+        text.append(x.Industry_composition)
+        text.append(x.date)
+        text.append(x.cateName)
+        text.append(x.tradeIndex)
+        text.append(x.tradeGrowthRange)
+        text.append(x.payAmtParentCateRate)
+        text.append(x.payCntParentCateRate)
+        text.append(x.Payment_amount)
+        form.append(text)
+    form = np.array(form)
+    form = np.array(list(set([tuple(t) for t in form])))
+    return form
+# 子行业构成
+def Subindustry_Distribution_show(data,dtype):
+    if dtype == "cateid":
+        data = Subindustry_Distribution.query.filter_by(cateID=data).all()
+    elif dtype == "cateName":
+        data = Subindustry_Distribution.query.filter_by(cateName=data).all()
+    form = []
+    for x in data:
+        # print(1)
+        text = []
+        text.append(x.cateID)
+        text.append(x.Data_module)
+        text.append(x.date)
+        text.append(x.cateName)
+        text.append(x.slrCnt)
+        text.append(x.parentCateSlrRate)
+        text.append(x.tradeSlrCnt)
+        text.append(x.parentCateTradeSlrCntRate)
+        form.append(text)
+    form = np.array(form)
+    form = np.array(list(set([tuple(t) for t in form])))
+    return form
+# 高流量店铺排行
+def Shop_hotsearchc_show():
+    data = Shop_hotsearch.query.all()
+    form = []
+    for x in data:
+        text = []
+        text.append(x.cateID)
+        text.append(x.Data_module)
+        text.append(x.data_type)
+        text.append(x.date)
+        text.append(x.shop_title)
+        text.append(x.cateRankId)
+        text.append(x.userId)
+        text.append(x.shopUrl)
+        text.append(x.b2CShop)
+        text.append(x.uvIndex)
+        text.append(x.seIpvUvHits)
+        text.append(x.tradeIndex)
+        text.append(x.Search)
+        text.append(x.Payment_amount)
+        text.append(x.Visito)
+        form.append(text)
+    form = np.array(form)
+    return form
+
+# 高流量商品排行
+def Item_hotsearchm_show():
+    data = Item_hotsearch.query.all()
+    form = []
+    for x in data:
+        text = []
+        text.append(x.cateID)
+        text.append(x.Data_modul)
+        text.append(x.data_type)
+        text.append(x.date)
+        text.append(x.item_title)
+        text.append(x.itemId)
+        text.append(x.detailUrl)
+        text.append(x.cateRankId)
+        text.append(x.shop_title)
+        text.append(x.userId)
+        text.append(x.shopUrl)
+        text.append(x.uvIndex)
+        text.append(x.seIpvUvHits)
+        text.append(x.tradeIndex)
+        text.append(x.Search)
+        text.append(x.Payment_amount)
+        text.append(x.Visitor)
+        form.append(text)
+    form = np.array(form)
+    return form
+# 高交易商品排行
+def Item_hotsales_show():
+    data = Item_hotsale.query.all()
+    form = []
+    for x in data:
+        text = []
+        text.append(x.cateID)
+        text.append(x.Data_module)
+        text.append(x.data_type)
+        text.append(x.date)
+        text.append(x.item_title)
+        text.append(x.itemId)
+        text.append(x.detailUrl)
+        text.append(x.cateRankId)
+        text.append(x.shop_title)
+        text.append(x.userId)
+        text.append(x.shopUrl)
+        text.append(x.payRateIndex)
+        text.append(x.tradeIndex)
+        text.append(x.Conversion_rate)
+        text.append(x.Payment_amount)
+        form.append(text)
+    form = np.array(form)
+    return form
+# 高流量品牌排行
+def Brand_hotsearcha_show():
+    data = Brand_hotsale.query.all()
+    form = []
+    for x in data:
+        text = []
+        text.append(x.cateID)
+        text.append(x.Data_module)
+        text.append(x.data_type)
+        text.append(x.date)
+        text.append(x.brandName)
+        text.append(x.brandId)
+        text.append(x.cateRankId)
+        text.append(x.uvIndex)
+        text.append(x.seIpvUvHits)
+        text.append(x.tradeIndex)
+        text.append(x.Visitor)
+        text.append(x.Search)
+        text.append(x.Payment_amount)
+        form.append(text)
+    form = np.array(form)
+    return form
+# 高交易品牌排行
+def Brand_hotsalec_show():
+    data = Brand_hotsale.query.all()
+    form = []
+    for x in data:
+        text = []
+        text.append(x.cateID)
+        text.append(x.Data_module)
+        text.append(x.data_type)
+        text.append(x.date)
+        text.append(x.brandName)
+        text.append(x.brandId)
+        text.append(x.payRateIndex)
+        text.append(x.tradeIndex)
+        text.append(x.Conversion_rate)
+        text.append(x.Payment_amount)
+        form.append(text)
+    form = np.array(form)
+    return form
+# 热门属性
+def Hot_attributes_show(cateID,dtype):
+    if dtype == "cateid":
+        print(cateID)
+        data = Hot_attributes.query.filter_by(cateID=cateID).all()
+    form = []
+    for x in data:
+        text = []
+        text.append(x.cateID)
+        text.append(x.Data_module)
+        text.append(x.data_type)
+        text.append(x.date)
+        text.append(x.attribute_name)
+        text.append(x.payments_piece)
+        text.append(x.tradeIndex)
+        text.append(x.Sale)
+        form.append(text)
+    form = np.array(form)
+    return form
+
 """增加函数"""
 # 行业构成
-def Industry_composition_add(data):
-    for cow in data:
+def Industry_composition_add(form):
+    for cow in form:
         data = Industry_composition(cateID=cow[0], Industry_composition=cow[1],
                                     date=cow[2], cateName=cow[3], tradeIndex=cow[4], tradeGrowthRange=cow[5],
                                     payAmtParentCateRate=cow[6], payCntParentCateRate=cow[7], Payment_amount=cow[8])
 
         db.session.add(data)
     db.session.commit()
+def Subindustry_Distribution_add(form):
+    for cow in form:
+        # print(cow)
+        data = Subindustry_Distribution(cateID=cow[0], Data_module=cow[1],
+                                    date=cow[2], cateName=cow[3],slrCnt=cow[4],
+                                    parentCateSlrRate=cow[5], tradeSlrCnt=cow[6],
+                                    parentCateTradeSlrCntRate=cow[7])
+        db.session.add(data)
+    db.session.commit()
 
-# 子行业构成（卖家数占比）
-def Subindustry_Distribution_add(data):
-    def Industry_composition_if(data_cow):
-        stus = Industry_composition.query.filter(
-            and_(Industry_composition.cateID == str(data_cow[0]), Industry_composition.date == str(data_cow[2]),
-                 Industry_composition.cateName == str(data_cow[3])))
-        for x in stus:
-            return 1
-        return 0
-    for cow in data:
-        if Industry_composition_if(cow):
-            continue
-        else:
-            data_cow = Subindustry_Distribution(cateID=cow[0], Data_module=cow[1], date=cow[2], cateName=cow[3],slrCnt=cow[4], parentCateSlrRate=cow[5], tradeSlrCnt=cow[6],parentCateTradeSlrCntRate=cow[7])
-            db.session.add(data_cow)
-        db.session.commit()
-"""高流量店铺查看函数"""
-def Shop_hotsearchc():
-    data = Shop_hotsearch.query.all()
-    for x in data:
-        print(x.cateID)
-        print(x.Data_module)
-        print(x.data_type)
-        print(x.date)
-        print(x.shop_title)
-        print(x.cateRankId)
-        print(x.userId)
-        print(x.shopUrl)
-        print(x.b2CShop)
-        print(x.uvIndex)
-        print(x.seIpvUvHits)
-        print(x.tradeIndex)
-        print(x.Search)
-        print(x.Payment_amount)
-        print(x.Visito)
+# def Subindustry_Distribution_add(data):
+#     def Industry_composition_if(data_cow):
+#         stus = Industry_composition.query.filter(
+#             and_(Industry_composition.cateID == str(data_cow[0]), Industry_composition.date == str(data_cow[2]),
+#                  Industry_composition.cateName == str(data_cow[3])))
+#         for x in stus:
+#             return 1
+#         return 0
+#     for cow in data:
+#         if Industry_composition_if(cow):
+#             continue
+#         else:
+#             data_cow = Subindustry_Distribution(cateID=cow[0], Data_module=cow[1], date=cow[2], cateName=cow[3],slrCnt=cow[4], parentCateSlrRate=cow[5], tradeSlrCnt=cow[6],parentCateTradeSlrCntRate=cow[7])
+#             db.session.add(data_cow)
+#     db.session.commit()
 # 高流量店铺排行
-def shop_hotsearch(data):
+def shop_hotsearch_add(data):
     for cow in data:
         data_cow = Shop_hotsearch(cateID=cow[0], Data_module=cow[1],data_type=cow[2], date=cow[3],shop_title=cow[4], cateRankId=cow[5],userId=cow[6],shopUrl=cow[7],b2CShop=cow[8] ,uvIndex=cow[9],seIpvUvHits=cow[10],tradeIndex=cow[11],Search=cow[12],Payment_amount=cow[13],Visitor=cow[14])
         db.session.add(data_cow)
     db.session.commit()
 
 #高交易店铺排行
-def shop_hotsale(data):
+def shop_hotsale_add(data):
     for cow in data:
         data_cow = Shop_hotsearch(cateID=cow[0], Data_module=cow[1],data_type=cow[2], date=cow[3],shop_title=cow[4], cateRankId=cow[5],userId=cow[6],shopUrl=cow[7],b2CShop=cow[8] ,tradeIndex=cow[9],payRateIndex=cow[10],Conversion_rate=cow[11],Payment_amount=cow[12])
         db.session.add(data_cow)
     db.session.commit()
-#高流量商品排行查看函数
-def Item_hotsearchm():
-    data = Item_hotsearch.query.all()
-    for x in data:
-        print(x.cateID)
-        print(x.Data_modul)
-        print(x.data_type)
-        print(x.date)
-        print(x.item_title)
-        print(x.itemId)
-        print(x.detailUrl)
-        print(x.cateRankId)
-        print(x.shop_title)
-        print(x.userId)
-        print(x.shopUrl)
-        print(x.uvIndex)
-        print(x.seIpvUvHits)
-        print(x.tradeIndex)
-        print(x.Search)
-        print(x.Payment_amount)
-        print(x.Visitor)
+
 #高流量商品排行
 
-def Item_hotsearch(data):
+def Item_hotsearch_add(data):
     for cow in data:
         data_cow = Item_hotsearch(cateID=cow[0], Data_module=cow[1],data_type=cow[2], date=cow[3],item_title=cow[4],
                                   itemId=cow[5],detailUrl=cow[6],cateRankId=cow[7],shop_title=cow[8],userId=cow[9],
@@ -688,28 +817,10 @@ def Item_hotsearch(data):
                                   Search=cow[14],Payment_amount=cow[15],Visitor=cow[16])
         db.session.add(data_cow)
     db.session.commit()
-#高交易商品排行查看函数
-def Item_hotsales():
-    data = Item_hotsale.query.all()
-    for x in data:
-        print(x.cateID)
-        print(x.Data_module)
-        print(x.data_type)
-        print(x.date)
-        print(x.item_title)
-        print(x.itemId)
-        print(x.detailUrl)
-        print(x.cateRankId)
-        print(x.shop_title)
-        print(x.userId)
-        print(x.shopUrl)
-        print(x.payRateIndex)
-        print(x.tradeIndex)
-        print(x.Conversion_rate)
-        print(x.Payment_amount)
+
 #高交易商品排行
 
-def Item_hotsale(data):
+def Item_hotsale_add(data):
     for cow in data:
         data_cow = Item_hotsale(cateID=cow[0], Data_module=cow[1],data_type=cow[2], date=cow[3],item_title=cow[4], itemId=cow[5],
                         detailUrl=cow[6],cateRankId=cow[7],shop_title=cow[8],userId=cow[9],
@@ -717,25 +828,9 @@ def Item_hotsale(data):
                         Payment_amount=cow[14])
         db.session.add(data_cow)
     db.session.commit()
-#高流量品牌排行 查询函数
-def Brand_hotsearcha():
-    data = Brand_hotsale.query.all()
-    for x in data:
-        print(x.cateID)
-        print(x.Data_module)
-        print(x.data_type)
-        print(x.date)
-        print(x.brandName)
-        print(x.brandId)
-        print(x.cateRankId)
-        print(x.uvIndex)
-        print(x.seIpvUvHits)
-        print(x.tradeIndex)
-        print(x.Visitor)
-        print(x.Search)
-        print(x.Payment_amount)
+
 #高流量品牌排行
-def Brand_hotsearch(data):
+def Brand_hotsearch_add(data):
     for cow in data:
         data_show = Brand_hotsearch(cateID=cow[0], Data_module=cow[1],data_type=cow[2], date=cow[3],brandName=cow[4],
                                     brandId=cow[5],cateRankId=cow[6],uvIndex=cow[7],seIpvUvHits=cow[8],
@@ -743,23 +838,10 @@ def Brand_hotsearch(data):
         db.session.add(data_show)
     db.session.commit()
 #====================================
-# 高交易品牌排行表查看函数
-def Brand_hotsalec():
-    data = Brand_hotsale.query.all()
-    for x in data:
-        print(x.cateID)
-        print(x.Data_module)
-        print(x.data_type)
-        print(x.date)
-        print(x.brandName)
-        print(x.brandId)
-        print(x.payRateIndex)
-        print(x.tradeIndex)
-        print(x.Conversion_rate)
-        print(x.Payment_amount)
+
 
 #高交易品牌排行
-def Brand_hotsale(data):
+def Brand_hotsale_add(data):
     for cow in data:
         data_show = Brand_hotsale(cateID=cow[0], Data_module=cow[1],data_type=cow[2], date=cow[3],item_title=cow[4],
                          itemId=cow[5],detailUrl=cow[6],cateRankId=cow[7],payRateIndex=cow[8],tradeIndex=cow[9],
@@ -767,3 +849,68 @@ def Brand_hotsale(data):
         db.session.add(data_show)
     db.session.commit()
 
+# 热门属性
+def Hot_attributes_add(data):
+    for cow in data:
+        data_show = Hot_attributes(cateID=cow[0], Data_module=cow[1],data_type=cow[2],
+                                  date=cow[3],attribute_name=cow[4],payments_piece=cow[5],
+                                   tradeIndex=cow[6], Sale=cow[7])
+        db.session.add(data_show)
+    db.session.commit()
+#搜索排行表
+def Search_terms_add(data):
+    for cow in data:
+        data_show = Search_terms(cateID=cow[0], Data_module=cow[1],data_type=cow[2],
+                                  date=cow[3],searchWord=cow[4], hotSearchRank=cow[5], seIpvUvHits=cow[6],clickHits=cow[7],clickRate=cow[8],
+                                 payRate=cow[9],p4pRefPrice=[10],tmClickRate=cow[11],search=[12],click=cow[13])
+        db.session.add(data_show)
+    db.session.commit()
+#品牌词排行
+def Brand_Word_add(data):
+    for cow in data:
+        data_show = Brand_Word(cateID=cow[0], Data_module=cow[1],data_type=cow[2],
+                                  date=cow[3],searchWord=cow[4], hotSearchRank=cow[5], relSeWordCnt=cow[6],avgWordSeIpvUvHits=cow[7],avgWordClickHits=cow[8],
+                               p4pRefPrice=cow[9],search=[10],click=cow[11])
+        db.session.add(data_show)
+    db.session.commit()
+#修饰词排行表   Modifiers_Word
+def Modifiers_Word_add(data):
+    for cow in data:
+        data_show = Modifiers_Word(cateID=cow[0], Data_module=cow[1],data_type=cow[2],
+                                  date=cow[3],searchWord=cow[4], hotSearchRank=cow[5], relSeWordCnt=cow[6],avgWordSeIpvUvHits=cow[7],avgWordClickHits=cow[8],
+                               p4pRefPrice=cow[9],search=[10],click=cow[11])
+        db.session.add(data_show)
+    db.session.commit()
+#核心词排行
+def Core_word_add(data):
+    for cow in data:
+        data_show = Core_word(cateID=cow[0], Data_module=cow[1],data_type=cow[2],
+                                  date=cow[3],searchWord=cow[4], hotSearchRank=cow[5], relSeWordCnt=cow[6],avgWordSeIpvUvHits=cow[7],avgWordClickHits=cow[8],
+                               p4pRefPrice=cow[9],search=[10],click=cow[11])
+        db.session.add(data_show)
+    db.session.commit()
+#搜索分析表  *****此表存在问题，需要确认
+# def Search_analysis30_add(data):
+#     for cow in data:
+#         data_show = Search_analysis30(Data_module=cow[0], date=cow[1],word=cow[2],
+#                                       keyword=cow[3],seIpvUvHits=cow[4], spvRatio=cow[5], sePvIndex=cow[6],clickRate=cow[7],clickHits=cow[8],
+#                                       clickHot=cow[9],tradeIndex=[10],payConvRate=cow[11],
+#                                       onlineGoodsCnt=cow[12],tmClickRatio=[13],p4pAmt=[14],
+#                                       Search_frequency=[15],click_Popularity=[16],click_Number=[17],click_Popularity=[18],click_Number=[19],Payment_amount=[20])
+#         db.session.add(data_show)
+#     db.session.commit()
+
+#地域分析表
+def Geographical_distribution_add(data):
+    for cow in data:
+        data_show = Geographical_distribution(cateID=cow[0], Data_module=cow[1],date=cow[2],
+                                              areaName=cow[3],slrCnt=cow[4], parentCateSlrRate=cow[5], tradeSlrCnt=cow[6],parentCateTradeSlrCntRate=cow[7])
+        db.session.add(data_show)
+#竞品入店来源表
+def Source_of_entry_product_add(data):
+    for cow in data:
+        data_show = Source_of_entry_product(cateID=cow[0], Data_module=cow[1], date=cow[2],
+                                            itemID=cow[3], pageName=cow[4], rivalItem1PayByrCntIndex=cow[5], uv=cow[6],
+                                            rivalItem1PayRateIndex=cow[7], rivalItem1TradeIndex=cow[8])
+        db.session.add(data_show)
+    db.session.commit()

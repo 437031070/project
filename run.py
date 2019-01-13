@@ -1,5 +1,5 @@
 from addsql import *
-
+from Data_cleaning import *
 
 
 
@@ -79,38 +79,35 @@ def gn3():
     if request.method == "GET":
         return render_template("Market_cquisition.html")
     else:
-        try:
-            cateid = request.form.get("cateId")
-            Industry_type = request.form.get("Industry_type")
-            IPS = BI.Industry_market(cateid, Industry_type)
-            ips = list(IPS.values())
-            dates = list(IPS.keys())
-            dic = {}
-            if request.form.get("data1") or request.form.get("data2") or request.form.get("data3") or request.form.get("data4") or request.form.get("data5") or request.form.get("data6") or request.form.get("data7") or request.form.get("data8") or request.form.get("data9") or request.form.get("data10") or request.form.get("data11") or request.form.get("data12"):
-                for x in range(1,13):
-                    Industry_type = request.form.get("Industry_type")
-                    cateid = request.form.get("cateId")
-                    time = request.form.get("time" + str(x))
-                    data = request.form.get("data" + str(x))
-                    if data != "":
-                        dic[time]= data
-
-                for x in dic:
-                    if Industry_type == "行业交易构成":
-                        date = x
-                        data = dic[x]
-                        form = BI.Industry_composition_Decode(date, data, cateid)
-                        for cow in form:
-                            print(len(cow))
-                            data = Industry_composition(cateID=cow[0],Industry_composition=cow[1],date=cow[2],cateName=cow[3],tradeIndex=cow[4],tradeGrowthRange=cow[5],payAmtParentCateRate=cow[6],payCntParentCateRate=cow[7],Payment_amount=cow[8])
-                            db.session.add(data)
-                            db.session.commit()
-                    elif Industry_type == "卖家分布":
-                        date = x
-                        data = dic[x]
-                        form = BI.seller_composition_Decode(date,data,cateid)
-        except:
-            return render_template("404.html")
+        # try:
+        cateid = request.form.get("cateId")
+        Industry_type = request.form.get("Industry_type")
+        IPS = BI.Industry_market(cateid, Industry_type)
+        # print(IPS)
+        ips = list(IPS.values())
+        dates = list(IPS.keys())
+        dic = {}
+        if request.form.get("data1") or request.form.get("data2") or request.form.get("data3") or request.form.get("data4") or request.form.get("data5") or request.form.get("data6") or request.form.get("data7") or request.form.get("data8") or request.form.get("data9") or request.form.get("data10") or request.form.get("data11") or request.form.get("data12"):
+            for x in range(1,13):
+                Industry_type = request.form.get("Industry_type")
+                cateid = request.form.get("cateId")
+                time = request.form.get("time" + str(x))
+                data = request.form.get("data" + str(x))
+                if data != "":
+                    dic[time]= data
+            for x in dic:
+                if Industry_type == "行业交易构成":
+                    date = x
+                    data = dic[x]
+                    form = BI.Industry_composition_Decode(date, data, cateid)
+                    Industry_composition_add(form)
+                elif Industry_type == "卖家分布":
+                    date = x
+                    data = dic[x]
+                    form = BI.seller_composition_Decode(date,data,cateid)
+                    Subindustry_Distribution_add(form)
+        # except:
+        #     return render_template("404.html")
         return render_template("Market_cquisition.html",ips=IPS,dates=dates,cateid=cateid,Industry_type=Industry_type)
 #市场排行
 @app.route("/The_market_was",methods=["POST","GET"])
@@ -143,21 +140,14 @@ def hn_show():
                 elif Industry_type2 == "高流量":
                     Industry_type2 = "hotsearch"
             IPS = BI.Store_ranking(cateid,Industry_type2,Industry_type)
-            ips = list(IPS.values())
-            dates = list(IPS.keys())
             dic = {}
             if request.form.get("data1") or request.form.get("data2") or request.form.get("data3") or request.form.get("data4") or request.form.get("data5") or request.form.get("data6") or request.form.get("data7") or request.form.get("data8") or request.form.get("data9") or request.form.get("data10") or request.form.get("data11") or request.form.get("data12"):
                 for x in range(1,13):
-                    print(x)
                     Industry_type = request.form.get("Industry_type")
-
                     cateid = request.form.get("cateId")
-
                     Industry_type2 = request.form.get("Industry_type2")
                     time = request.form.get("time" + str(x))
-                    print(time)
                     data = request.form.get("data" + str(x))
-                    print(data)
                     if data != "":
                         dic[time]= data
 
@@ -171,7 +161,6 @@ def hn_show():
 
                 if len(mat) > 1:
                     for form in mat[1:]:
-
                         form_start = np.vstack((form_start,form))
         except:
             return render_template("Error.html")
@@ -200,14 +189,14 @@ def attribute_views():
     if request.method=="GET":
         return render_template("Attribute.html")
     else:
-        try:
-            attribute_ip = request.form.get("data1")
-            data = request.form.get("data2")
-            data = BI.Hot_attributes(data, attribute_ip)
-            #热门属性存入数据库
+        # try:
+        attribute_ip = request.form.get("data1")
+        data = request.form.get("data2")
+        data = BI.Hot_attributes(data, attribute_ip)
+        Hot_attributes_add(data)
 
-        except:
-            return render_template("Error.html")
+        # except:
+        #     return render_template("Error.html")
         return render_template("Attribute.html",data1=attribute_ip)
 
 #搜索排行
@@ -553,7 +542,9 @@ def test_views():
         return render_template("index.html")
     else:
         data = request.form.get("test")
+        data = Hot_attributes(data)
         print(data)
+
         return render_template("index.html")
 #行业趋势
 @app.route("/Industry_trends_map",methods=["POST","GET"])
@@ -561,12 +552,62 @@ def Industry_trends_views():
     if request.method=="GET":
         return render_template("Industry_trends_map.html")
     else:
-        data={"date":["2018-10-01","2018-11-01","2018-12-01"],
-            "data1":[10,20,50],
-            "data2":[15,10,30]}
+        name = request.form.get("data1")
+        print(name)
+        data = Industry_trend_cleaning(name)
+        print(data)
         data = json.dumps(data)
         return data
+#热门属性
+@app.route("/Hot_property",methods=["POST","GET"])
+def hot_property_views():
+    if request.method=="GET":
 
+        return render_template("Hot_property.html")
+    else:
+        data = request.form.get("data1")
+        print(data)
+        data = Hot_attributes(data)
+        session['data']=data
+        data = list(data.keys())
+        print(data)
+        return render_template("Hot_property.html",data=data)
+#接收热门属性框内值 返回json数据
+@app.route("/Hot_property_add",methods=["POST","GET"])
+def ccviews():
+    if request.method=="POST":
+        type_ = request.form.get("data")
+        data = session.get("data")
+        data = data[type_]
+        names = []
+        for x in data:
+            names.append(x["name"])
+        print(data)
+        print(names)
+        print(type_)
+        data = [data,names,type_]
+        print(data)
+        data = json.dumps(data)
+        return data
+#市场分布
+@app.route("/Market_distribution",methods=["POST","GET"])
+def Market_distribution_views():
+    if request.method=="GET":
+        return render_template("Market_distribution.html")
+    else:
+        name = request.form.get("data1")
+        xiala = request.form.get("data2")
+        print(xiala)
+
+        print(name)
+#人群定位
+@app.route("/The_crowd_positioning",methods=["POST","GET"])
+def The_crowd_positioning_views():
+    if request.method=="GET":
+        return render_template("The_crowd_positioning.html")
+    else:
+        name = request.form.get("data1")
+        print(name)
 #404
 @app.errorhandler(404)
 def a(e):
@@ -577,10 +618,12 @@ if __name__=="__main__":
     # 家里主机IP
     # app.run(debug=True,host="192.168.0.106")
     #wife
-    app.run(debug=Flask,host="192.168.0.103")
+    app.run(debug=Flask,host="192.168.43.112")
     #DN
     # app.run(debug=False,host="176.47.2.41")
     # 罗辑(公司)主机IP
     # app.run(debug=True, host="192.168.2.166")
+    # 罗辑2
+    # app.run(debug=True, host="192.168.1.4")
 
 

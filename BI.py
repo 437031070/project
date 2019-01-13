@@ -15,11 +15,13 @@ import sklearn.linear_model as sl  # 线性模型包
 import sklearn.model_selection as ms  # 新版本  划分训练和测试
 import sklearn.metrics as sm  # 评估包
 import pickle
+from dateutil.relativedelta import relativedelta
 
 np.set_printoptions(suppress=True)
 # 数据清洗指数还原
 def Exponential_reduction_inside(data, Choice):
     data = data.reshape((data.size, 1))
+    print(data.shape)
     models = []
     # 0
     model = pickle.load(open("models/转化率指数还原模型","rb"))
@@ -45,7 +47,6 @@ def Exponential_reduction_inside(data, Choice):
     # 7
     model = pickle.load(open("models/48000以上流量指数模型", "rb"))
     models.append(model)
-    # print(models)
     mat = []
     if Choice == "交易指数":
         for x in data:
@@ -82,9 +83,12 @@ def Exponential_reduction_inside(data, Choice):
             text = models[0].predict(x)[0][0]
             mat.append(np.round(text, 4))
     mat = np.array(mat)
+    print(mat.shape)
+
     mat = mat.reshape((mat.size, 1))
     return mat
     # 指数还原
+# 指数还原
 def Exponential_reduction(data, Choice):
     print(data)
     print(Choice)
@@ -208,11 +212,12 @@ def one_year_enerator():
     date = datetime.date.today()
     dates = []
     for x in range(12):
-        date = (date - datetime.timedelta(days=30)).strftime("%Y-%m-%d")
+        date = (date - relativedelta(months=1)).strftime("%Y-%m-%d")
         date = Time_enerator(dateType, date)
         dates.append(date)
         date = datetime.datetime.strptime(date[0], "%Y-%m-%d")
     dates = np.array(dates)
+    print(dates)
     return dates
 # 运营视窗
 def Aop_window(sheet):
@@ -662,7 +667,6 @@ def Industry_ranking_Data_decoding(date,cateID,data,one_type,tow_type):
 
 # 热门属性
 def Hot_attributes(data, attribute_ip):
-    print(data)
     result = parse.urlparse(attribute_ip)
     text = result.query.split("&")
     for x in text:
@@ -735,7 +739,18 @@ def Hot_attributes(data, attribute_ip):
         form.append(text)
     form = np.array(form)
     Sale = form[::, 5]
-    Sale = Exponential_reduction_inside(Sale, "交易指数")
+    print(Sale.shape)
+    sale = []
+    for x in Sale:
+        if ',' in x:
+            x = x.translate(str.maketrans('', '', ','))
+            sale.append(x)
+        else:
+            sale.append(x)
+    sale = np.array(sale)
+    Sale = Exponential_reduction_inside(sale, "交易指数")
+    print(Sale.shape)
+    print(form.shape)
     form = np.hstack((form, Sale))
     # print(form)
     return form

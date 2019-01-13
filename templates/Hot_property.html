@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="/static/js/jquery-1.11.3.js"></script>
+<script src="http://echarts.baidu.com/dist/echarts.min.js"></script>
+<!--<script>-->
+    <!--$(function(){-->
+        <!--var myChart = echarts.init(document.getElementById('main'));-->
+        <!--$("#c1").click(function(){-->
+        <!--var data1 = $("#values").val()-->
+        <!--console.log(data1)-->
+        <!--$.ajax({-->
+         <!--url:"/Hot_property",-->
+         <!--type:"post",-->
+         <!--data:{data1:data1},-->
+         <!--dataType:"json",-->
+         <!--success:function(data){-->
+                  <!--//图表区域-->
+         <!--console.log(data)-->
+
+
+
+
+
+
+
+
+<!--}-->
+<!--})-->
+<!--})-->
+<!--})-->
+<!--</script>-->
+<script>
+    $(function(){
+    var myChart = echarts.init(document.getElementById('main'));
+    $("#cc").click(function(){
+            var data = $("#cc").val()
+            console.log(data)
+            $.ajax({
+            url:"/Hot_property_add",
+            type:"post",
+            data:{data:data},
+            dataType:"json",
+            success:function(data){
+        var data=data[0];
+        var name = data[1];
+
+        var Attribute_types = data[2];
+        var option = {
+        title : {
+        text: '热门属性',
+        subtext: Attribute_types,
+        x:'center'
+    },
+        tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+        legend: {
+        orient: 'vertical',
+        left: 'left',
+        data:name
+    },
+    series : [
+        {
+            name: Attribute_types,
+            type: 'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data:data,
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
+
+// 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+//图表end
+
+
+
+
+
+}
+})
+})
+})
+</script>
+<body>
+    <a href="/index">返回首页</a>
+    <form action="/Hot_property" method="post">
+    <input type="text" id="values" placeholder="请输入值" name="data1">
+    <input type="submit" value="提交">
+    </form>
+    {%if data%}
+        <select id="cc">
+            {%for x in data%}
+            <option id="leix">{{x}}</option>
+            {%endfor%}
+        </select>
+    {%endif%}
+    <div id="main" style="width:100%;height:400px;"></div>
+</body>
+</html>
