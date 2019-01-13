@@ -79,35 +79,35 @@ def gn3():
     if request.method == "GET":
         return render_template("Market_cquisition.html")
     else:
-        # try:
-        cateid = request.form.get("cateId")
-        Industry_type = request.form.get("Industry_type")
-        IPS = BI.Industry_market(cateid, Industry_type)
-        # print(IPS)
-        ips = list(IPS.values())
-        dates = list(IPS.keys())
-        dic = {}
-        if request.form.get("data1") or request.form.get("data2") or request.form.get("data3") or request.form.get("data4") or request.form.get("data5") or request.form.get("data6") or request.form.get("data7") or request.form.get("data8") or request.form.get("data9") or request.form.get("data10") or request.form.get("data11") or request.form.get("data12"):
-            for x in range(1,13):
-                Industry_type = request.form.get("Industry_type")
-                cateid = request.form.get("cateId")
-                time = request.form.get("time" + str(x))
-                data = request.form.get("data" + str(x))
-                if data != "":
-                    dic[time]= data
-            for x in dic:
-                if Industry_type == "行业交易构成":
-                    date = x
-                    data = dic[x]
-                    form = BI.Industry_composition_Decode(date, data, cateid)
-                    Industry_composition_add(form)
-                elif Industry_type == "卖家分布":
-                    date = x
-                    data = dic[x]
-                    form = BI.seller_composition_Decode(date,data,cateid)
-                    Subindustry_Distribution_add(form)
-        # except:
-        #     return render_template("404.html")
+        try:
+            cateid = request.form.get("cateId")
+            Industry_type = request.form.get("Industry_type")
+            IPS = BI.Industry_market(cateid, Industry_type)
+            # print(IPS)
+            ips = list(IPS.values())
+            dates = list(IPS.keys())
+            dic = {}
+            if request.form.get("data1") or request.form.get("data2") or request.form.get("data3") or request.form.get("data4") or request.form.get("data5") or request.form.get("data6") or request.form.get("data7") or request.form.get("data8") or request.form.get("data9") or request.form.get("data10") or request.form.get("data11") or request.form.get("data12"):
+                for x in range(1,13):
+                    Industry_type = request.form.get("Industry_type")
+                    cateid = request.form.get("cateId")
+                    time = request.form.get("time" + str(x))
+                    data = request.form.get("data" + str(x))
+                    if data != "":
+                        dic[time]= data
+                for x in dic:
+                    if Industry_type == "行业交易构成":
+                        date = x
+                        data = dic[x]
+                        form = BI.Industry_composition_Decode(date, data, cateid)
+                        Industry_composition_add(form)
+                    elif Industry_type == "卖家分布":
+                        date = x
+                        data = dic[x]
+                        form = BI.seller_composition_Decode(date,data,cateid)
+                        Subindustry_Distribution_add(form)
+        except:
+            return render_template("404.html")
         return render_template("Market_cquisition.html",ips=IPS,dates=dates,cateid=cateid,Industry_type=Industry_type)
 #市场排行
 @app.route("/The_market_was",methods=["POST","GET"])
@@ -189,14 +189,14 @@ def attribute_views():
     if request.method=="GET":
         return render_template("Attribute.html")
     else:
-        # try:
-        attribute_ip = request.form.get("data1")
-        data = request.form.get("data2")
-        data = BI.Hot_attributes(data, attribute_ip)
-        Hot_attributes_add(data)
+        try:
+            attribute_ip = request.form.get("data1")
+            data = request.form.get("data2")
+            data = BI.Hot_attributes(data, attribute_ip)
+            Hot_attributes_add(data)
 
-        # except:
-        #     return render_template("Error.html")
+        except:
+            return render_template("Error.html")
         return render_template("Attribute.html",data1=attribute_ip)
 
 #搜索排行
