@@ -145,6 +145,8 @@ def hn_show():
             IPS = BI.Store_ranking(cateid,Industry_type2,Industry_type)
             ips = list(IPS.values())
             dates = list(IPS.keys())
+            times = ['2018-12-01', '2018-11-01', '2018-10-01', '2018-09-01', '2018-08-01', '2018-07-01', '2018-06-01', '2018-05-01', '2018-04-01', '2018-03-01', '2018-02-01', '2018-01-01']
+
 
             dic = {}
             if request.form.get("data1") or request.form.get("data2") or request.form.get("data3") or request.form.get("data4") or request.form.get("data5") or request.form.get("data6") or request.form.get("data7") or request.form.get("data8") or request.form.get("data9") or request.form.get("data10") or request.form.get("data11") or request.form.get("data12"):
@@ -171,7 +173,7 @@ def hn_show():
         except:
             return render_template("Error.html")
 
-        return render_template("The_market_was.html",ips=ips,dates=dates,cateid=cateid,Industry_type=Industry_type,Industry_type2=Industry_type2)
+        return render_template("The_market_was.html",ips=ips,dates=times,cateid=cateid,Industry_type=Industry_type,Industry_type2=Industry_type2)
 
 #下拉
 @app.route("/xl_qz",methods=["POST","GET"])
