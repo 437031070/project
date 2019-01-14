@@ -56,9 +56,9 @@
         <form action="/The_market_was" method="post">
             {% for x in ips%}
                 <p></p>
-                <input name="time{{loop.index}}" value="{{x}}">
+                <input name="time{{loop.index}}" value="{{dates[loop.index-1]}}">
                 <p></p>
-                <a target="_blank" href="{{ips[x]}}">跳转链接</a>
+                <a target="_blank" href="{{x}}">跳转链接</a>
                 <p></p>
                 <textarea cols=40 rows=10 name="data{{loop.index}}"></textarea>
             {%endfor%}

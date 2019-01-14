@@ -170,7 +170,7 @@ def hn_show():
         except:
             return render_template("Error.html")
 
-        return render_template("The_market_was.html",ips=IPS,dates=dates,cateid=cateid,Industry_type=Industry_type,Industry_type2=Industry_type2)
+        return render_template("The_market_was.html",ips=ips,dates=dates,cateid=cateid,Industry_type=Industry_type,Industry_type2=Industry_type2)
 
 #下拉
 @app.route("/xl_qz",methods=["POST","GET"])
