@@ -626,9 +626,9 @@ if __name__=="__main__":
     # 家里主机IP
     # app.run(debug=True,host="192.168.0.106")
     #项目ip
-    # app.run(debug=True)
+    app.run(debug=True)
     #wife笔记本IP
-    app.run(debug=True,host='192.168.0.103')
+    # app.run(debug=True,host='192.168.0.103')
     #DN
     # app.run(debug=False,host="176.47.2.41")
     # 罗辑(公司)主机IP
