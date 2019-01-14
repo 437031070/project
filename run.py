@@ -83,6 +83,7 @@ def gn3():
             cateid = request.form.get("cateId")
             Industry_type = request.form.get("Industry_type")
             IPS = BI.Industry_market(cateid, Industry_type)
+	    
             # print(IPS)
             ips = list(IPS.values())
             dates = list(IPS.keys())
@@ -620,7 +621,7 @@ if __name__=="__main__":
     # 家里主机IP
     # app.run(debug=True,host="192.168.0.106")
     #wife
-    app.run(debug=Flask,host="192.168.43.112")
+    app.run(debug=True)
     #DN
     # app.run(debug=False,host="176.47.2.41")
     # 罗辑(公司)主机IP
