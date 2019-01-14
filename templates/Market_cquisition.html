@@ -32,9 +32,9 @@
         <form action="/Market_cquisition" method="post">
             {% for x in ips%}
                 <p></p>
-                <input name="time{{loop.index}}" value="{{x}}">
+                <input name="time{{loop.index}}" value="{{dates[loop.index-1]}}">
                 <p></p>
-                <a href="{{ips[x]}}" target="_blank">跳转链接</a>
+                <a href="{{x}}" target="_blank">跳转链接</a>
                 <p></p>
                 <textarea cols=40 rows=10 name="data{{loop.index}}"></textarea>
             {%endfor%}

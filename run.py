@@ -109,7 +109,9 @@ def gn3():
                         Subindustry_Distribution_add(form)
         except:
             return render_template("404.html")
-        return render_template("Market_cquisition.html",ips=IPS,dates=dates,cateid=cateid,Industry_type=Industry_type)
+        ips.sort(reverse=True)
+        dates.sort(reverse=True)
+        return render_template("Market_cquisition.html",ips=ips,dates=dates,cateid=cateid,Industry_type=Industry_type)
 #市场排行
 @app.route("/The_market_was",methods=["POST","GET"])
 def hn_show():
