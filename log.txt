@@ -248,3 +248,27 @@ TypeError: The view function did not return a valid response. The function eithe
 [2019-01-14 14:51:52 +0800] [17614] [INFO] Worker exiting (pid: 17614)
 [2019-01-14 14:51:52 +0800] [17613] [INFO] Worker exiting (pid: 17613)
 [2019-01-14 14:51:53 +0800] [17607] [INFO] Shutting down: Master
+[2019-01-14 18:50:04 +0800] [7626] [INFO] Starting gunicorn 19.9.0
+[2019-01-14 18:50:04 +0800] [7626] [ERROR] Connection in use: ('127.0.0.1', 5000)
+[2019-01-14 18:50:04 +0800] [7626] [ERROR] Retrying in 1 second.
+[2019-01-14 18:50:05 +0800] [7626] [ERROR] Connection in use: ('127.0.0.1', 5000)
+[2019-01-14 18:50:05 +0800] [7626] [ERROR] Retrying in 1 second.
+[2019-01-14 18:50:06 +0800] [7626] [ERROR] Connection in use: ('127.0.0.1', 5000)
+[2019-01-14 18:50:06 +0800] [7626] [ERROR] Retrying in 1 second.
+[2019-01-14 18:50:07 +0800] [7626] [ERROR] Connection in use: ('127.0.0.1', 5000)
+[2019-01-14 18:50:07 +0800] [7626] [ERROR] Retrying in 1 second.
+[2019-01-14 18:50:08 +0800] [7626] [ERROR] Connection in use: ('127.0.0.1', 5000)
+[2019-01-14 18:50:08 +0800] [7626] [ERROR] Retrying in 1 second.
+[2019-01-14 18:50:09 +0800] [7626] [ERROR] Can't connect to ('127.0.0.1', 5000)
+[2019-01-14 18:51:15 +0800] [7742] [INFO] Starting gunicorn 19.9.0
+[2019-01-14 18:51:15 +0800] [7742] [ERROR] Connection in use: ('127.0.0.1', 5000)
+[2019-01-14 18:51:15 +0800] [7742] [ERROR] Retrying in 1 second.
+[2019-01-14 18:51:16 +0800] [7742] [ERROR] Connection in use: ('127.0.0.1', 5000)
+[2019-01-14 18:51:16 +0800] [7742] [ERROR] Retrying in 1 second.
+[2019-01-14 18:51:17 +0800] [7742] [ERROR] Connection in use: ('127.0.0.1', 5000)
+[2019-01-14 18:51:17 +0800] [7742] [ERROR] Retrying in 1 second.
+[2019-01-14 18:51:18 +0800] [7742] [ERROR] Connection in use: ('127.0.0.1', 5000)
+[2019-01-14 18:51:18 +0800] [7742] [ERROR] Retrying in 1 second.
+[2019-01-14 18:51:19 +0800] [7742] [ERROR] Connection in use: ('127.0.0.1', 5000)
+[2019-01-14 18:51:19 +0800] [7742] [ERROR] Retrying in 1 second.
+[2019-01-14 18:51:20 +0800] [7742] [ERROR] Can't connect to ('127.0.0.1', 5000)
