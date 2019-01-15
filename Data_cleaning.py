@@ -76,13 +76,12 @@ def Hot_attributes(cateid):
 # 市场分布
 # 合并不足等后期优化
 def Market_distribution(cateID, date):
-    date = "2018-12-01"
     Shop_hotsearch_data = Shop_hotsearch_show(cateID)
     Shop_hotsale_data = Shop_hotsale_show(cateID)
-    print(Shop_hotsearch_data[0])
-    print(Shop_hotsale_data[0])
-    print(Shop_hotsearch_data.shape)
-    print(Shop_hotsale_data.shape)
+    # print(Shop_hotsearch_data[0])
+    # print(Shop_hotsale_data[0])
+    # print(Shop_hotsearch_data.shape)
+    # print(Shop_hotsale_data.shape)
     dates = date.split("-")
     year = dates[0]
     month = dates[1]
@@ -102,7 +101,7 @@ def Market_distribution(cateID, date):
             else:
                 pass
     data = np.array(form)
-    print(data.shape)
+    # print(data.shape)
     max_Customer = max(data[::,4])
     mat = [{"max_Customer":max_Customer}, {"data":form}]
     # print(form)

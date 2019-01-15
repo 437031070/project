@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<script src="/static/js/ECharts/Shop_Distribution.js"></script>
 <script src="/static/js/jquery-1.11.3.js"></script>
 <script src="http://echarts.baidu.com/dist/echarts.min.js"></script>
 <script>
@@ -12,38 +13,46 @@
         $("#c1").click(function(){
         var data1 = $("#values").val()
         var data2 = $("#xiala").val()
+        var date = $("#xx").val()
         console.log(data1)
         console.log(data2)
         $.ajax({
          url:"/Market_distribution",
          type:"post",
-         data:{data1:data1,data2:data2},
+         data:{data1:data1,data2:data2,date:date},
          dataType:"json",
          success:function(data){
                   //图表区域
-         console.log(data)
+         Shop_Distribution(data[0]["max_Customer"],data[1]["data"])
 
 
 
 
 
 
-
+  // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
 
 }
 })
 })
 })
+
 </script>
 <body>
     <a href="/index">返回首页</a>
     <input type="text" id="values" placeholder="请输入值">
+    <select id="xx">
+        {%for x in dates%}
+        <option>{{x}}</option>
+        {%endfor%}
+    </select>
     <select id="xiala">
         <option>店铺</option>
         <option>商品</option>
         <option>品牌</option>
     </select>
     <button id="c1">点击</button>
-    <div id="main" style="width:100%;height:400px;"></div>
+    <div id="main" style="width:1300px;height:800px;"></div>
 </body>
 </html>

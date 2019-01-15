@@ -118,60 +118,65 @@ def hn_show():
     if request.method == "GET":
         return render_template("The_market_was.html")
     else:
-        try:
-            cateid = request.form.get("cateId")
-            print(cateid,'*'*10)
-            Industry_type = request.form.get("Industry_type")
-            print(Industry_type, '*' * 10)
-            Industry_type2 = request.form.get("Industry_type2")
-            print(Industry_type2, '*' * 10)
-            if Industry_type == "商品":
-                Industry_type = "item"
-                if Industry_type2 == "高交易":
-                    Industry_type2 = "hotsale"
-                elif Industry_type2 == "高流量":
-                    Industry_type2 = "hotsearch"
-                elif Industry_type2 == "高意向":
-                    Industry_type2 = "hotpurpose"
-            elif Industry_type == "店铺":
-                Industry_type = "shop"
-                if Industry_type2 == "高交易":
-                    Industry_type2 = "hotsale"
-                elif Industry_type2 == "高流量":
-                    Industry_type2 = "hotsearch"
-            elif Industry_type == "品牌":
-                Industry_type = "brand"
-                if Industry_type2 == "高交易":
-                    Industry_type2 = "hotsale"
-                elif Industry_type2 == "高流量":
-                    Industry_type2 = "hotsearch"
-            IPS = BI.Store_ranking(cateid,Industry_type2,Industry_type)
-            ips = list(IPS.values())
-            dates = list(IPS.keys())
-            dic = {}
-            if request.form.get("data1") or request.form.get("data2") or request.form.get("data3") or request.form.get("data4") or request.form.get("data5") or request.form.get("data6") or request.form.get("data7") or request.form.get("data8") or request.form.get("data9") or request.form.get("data10") or request.form.get("data11") or request.form.get("data12"):
-                for x in range(1,13):
-                    Industry_type = request.form.get("Industry_type")
-                    cateid = request.form.get("cateId")
-                    Industry_type2 = request.form.get("Industry_type2")
-                    time = request.form.get("time" + str(x))
-                    data = request.form.get("data" + str(x))
-                    if data != "":
-                        dic[time]= data
+        # try:
+        cateid = request.form.get("cateId")
+        Industry_type = request.form.get("Industry_type")
+        Industry_type2 = request.form.get("Industry_type2")
+        if Industry_type == "商品":
+            Industry_type = "item"
+            if Industry_type2 == "高交易":
+                Industry_type2 = "hotsale"
+            elif Industry_type2 == "高流量":
+                Industry_type2 = "hotsearch"
+            elif Industry_type2 == "高意向":
+                Industry_type2 = "hotpurpose"
+        elif Industry_type == "店铺":
+            Industry_type = "shop"
+            if Industry_type2 == "高交易":
+                Industry_type2 = "hotsale"
+            elif Industry_type2 == "高流量":
+                Industry_type2 = "hotsearch"
+        elif Industry_type == "品牌":
+            Industry_type = "brand"
+            if Industry_type2 == "高交易":
+                Industry_type2 = "hotsale"
+            elif Industry_type2 == "高流量":
+                Industry_type2 = "hotsearch"
+        IPS = BI.Store_ranking(cateid, Industry_type2, Industry_type)
+        ips = list(IPS.values())
+        dates = list(IPS.keys())
+        if request.form.get("data1") or request.form.get("data2") or request.form.get("data3") or request.form.get("data4") or request.form.get("data5") or request.form.get("data6") or request.form.get("data7") or request.form.get("data8") or request.form.get("data9") or request.form.get("data10") or request.form.get("data11") or request.form.get("data12"):
+            for x in range(1,13):
+                Industry_type = request.form.get("Industry_type")
+                cateid = request.form.get("cateId")
+                Industry_type2 = request.form.get("Industry_type2")
+                date = request.form.get("time" + str(x))
+                data = request.form.get("data" + str(x))
+                if data == "":
+                    continue
+                form = BI.Industry_ranking_Data_decoding(date, cateid, data, Industry_type, Industry_type2)
 
-                mat = []
-                for x in dic:
-                    date = x
-                    data = dic[x]
-                    form = BI.Industry_ranking_Data_decoding(date,cateid,data,Industry_type,Industry_type2)
-                    mat.append(form)
-                form_start = mat[0]
+                if Industry_type == "item":
+                    if Industry_type2 == "hotsale":
+                        pass
+                    elif Industry_type2 == "hotsearch":
+                        pass
+                    elif Industry_type2 == "hotpurpose":
+                        pass
+                elif Industry_type == "shop":
+                    if Industry_type2 == "hotsale":
+                        shop_hotsale_add(form)
+                        print(form[0])
 
-                if len(mat) > 1:
-                    for form in mat[1:]:
-                        form_start = np.vstack((form_start,form))
-        except:
-            return render_template("Error.html")
+                    elif Industry_type2 == "hotsearch":
+                        shop_hotsearch_add(form)
+                elif Industry_type == "brand":
+                    if Industry_type2 == "hotsale":
+                        pass
+                    elif Industry_type2 == "hotsearch":
+                        pass
+        # except:
+        #     return render_template("Error.html")
         ips.sort(reverse=True)
         dates.sort(reverse=True)
         return render_template("The_market_was.html",ips=ips,dates=dates,cateid=cateid,Industry_type=Industry_type,Industry_type2=Industry_type2)
@@ -591,13 +596,21 @@ def ccviews():
 @app.route("/Market_distribution",methods=["POST","GET"])
 def Market_distribution_views():
     if request.method=="GET":
-        return render_template("Market_distribution.html")
+        data = BI.one_year_enerator()
+        dates = list(data[::, 0])
+        return render_template("Market_distribution.html",dates=dates)
     else:
-        name = request.form.get("data1")
-        xiala = request.form.get("data2")
-        print(xiala)
-
-        print(name)
+        # 取框内值
+        cateID = request.form.get("data1")
+        # 取店铺的值
+        type_ = request.form.get("data2")
+        # 取时间的值
+        date = request.form.get("date")
+        if type_ == "店铺":
+            data = Market_distribution(cateID,date)
+            print(data)
+            data = json.dumps(data)
+            return data
 #人群定位
 @app.route("/The_crowd_positioning",methods=["POST","GET"])
 def The_crowd_positioning_views():

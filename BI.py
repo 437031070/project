@@ -57,9 +57,11 @@ def Exponential_reduction_inside(data, Choice):
             elif x > 6000 and x <= 20000:
                 text = models[2].predict(x)[0][0]
                 mat.append(int(text))
-            elif x > 20000:
+            elif x > 20000 < 1000000:
                 text = models[3].predict(x)[0][0]
                 mat.append(int(text))
+            elif x >= 1000000:
+                mat.append(25000000)
             else:
                 mat.append(0)
     # elif Choice == "其他指数":
@@ -217,7 +219,6 @@ def one_year_enerator():
         dates.append(date)
         date = datetime.datetime.strptime(date[0], "%Y-%m-%d")
     dates = np.array(dates)
-    print(dates)
     return dates
 # 运营视窗
 def Aop_window(sheet):
@@ -407,7 +408,7 @@ def Industry_ranking_Data_decoding(date,cateID,data,one_type,tow_type):
     # coding=gbk
     # with open('data.txt', "rb") as f:  # 设置文件对象
     #     data = f.read()
-    # print(type(str))
+    print(data)
     str = json.loads(data)["data"]
     # print(str[0])
     # 店铺
@@ -472,13 +473,15 @@ def Industry_ranking_Data_decoding(date,cateID,data,one_type,tow_type):
                 form.append(text)
             form = np.array(form)
             Payment_amount = form[::, 9]
+            print(Payment_amount)
             Payment_amount = Exponential_reduction_inside(Payment_amount, "交易指数")
+            print(Payment_amount)
             Conversion_rate = form[::,10]
-            print(Payment_amount)
+            # print(Payment_amount)
             Conversion_rate = Exponential_reduction_inside(Conversion_rate, "转化率指数")
-            print(Payment_amount)
+            # print(Payment_amount)
             # print(Conversion_rate)
-            print(form[:20])
+            # print(form[:20])
             form = np.hstack((form, Payment_amount))
             form = np.hstack((form, Conversion_rate))
 
