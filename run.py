@@ -326,60 +326,35 @@ def Race_views():
 @app.route("/addRace_shop",methods=["POST","GET"])
 def addRace_shop_views():
     if request.method == "POST":
-        # try:
-        shop_ip=session.get("shop_ip")
-        dates = ["最近30天"]
-        date_name = BI.one_year_enerator()
-        for date in date_name:
-            dates.append(date[0])
-        date = session.get("date")
-        cateID = session.get('cateID')
-        shopID = session.get('shopID')
-        if request.form.get("x1") or request.form.get("x2") or request.form.get("x3") or request.form.get("x4") or request.form.get("x5"):
-            if request.form.get("x1"):
-                data1=request.form.get("x1")
-                data1=BI.Commodity_composition_Decode(cateID,shopID,data1,date)
-                # print(data1)
-                #待存入数据库
-            elif request.form.get("x2"):
-                print(2)
-                data2 = request.form.get("x2")
-                print('this_data2',data2,'*'*20)
-                print('this_cateID',cateID,'*'*20)
-                print('this_shopID',shopID,'*'*20)
-                print('this_date',date,'*'*20)
-                #罗辑 负责部分出错  四个参数都有值，data1没有取到----BI出错
-                data1 = BI.Commodity_composition_Decode(cateID,shopID,data2, date)
-                print(data1,'data1','*'*30)
-            elif request.form.get("x3"):
-                print(3)
-                data3 = request.form.get("x3")
-                print('this_data3', data3, '*' * 20)
-                print('this_cateID', cateID, '*' * 20)
-                print('this_shopID', shopID, '*' * 20)
-                print('this_date', date, '*' * 20)
-                # 罗辑 负责部分出错  四个参数都有值，data1没有取到----BI出错
-                data1 = BI.Commodity_composition_Decode(cateID,shopID,data3, date)
-            elif request.form.get("x4"):
-                print(4)
-                data4 = request.form.get("x4")
-                print('this_data4', data4, '*' * 20)
-                print('this_cateID', cateID, '*' * 20)
-                print('this_shopID', shopID, '*' * 20)
-                print('this_date', date, '*' * 20)
-                # 罗辑 负责部分出错  四个参数都有值，data1没有取到----BI出错
-                data1 = BI.Commodity_composition_Decode(cateID,shopID,data4, date)
-            elif request.form.get("x5"):
-                print(5)
-                data5 = request.form.get("x5")
-                print('this_data5', data5, '*' * 20)
-                print('this_cateID', cateID, '*' * 20)
-                print('this_shopID', shopID, '*' * 20)
-                print('this_date', date, '*' * 20)
-                # 罗辑 负责部分出错  四个参数都有值，data1没有取到----BI出错
-                data1 = BI.Trend_of_competition_product_Decode(cateID,shopID,data5, date)
-        # except:
-        #     return render_template("Error.html")
+        try:
+            shop_ip=session.get("shop_ip")
+            dates = ["最近30天"]
+            date_name = BI.one_year_enerator()
+            for date in date_name:
+                dates.append(date[0])
+            date = session.get("date")
+            cateID = session.get('cateID')
+            shopID = session.get('shopID')
+            if request.form.get("x1") or request.form.get("x2") or request.form.get("x3") or request.form.get("x4") or request.form.get("x5"):
+                if request.form.get("x1"):
+                    data1=request.form.get("x1")
+                    data1=BI.Commodity_composition_Decode(cateID,shopID,data1,date)
+                    # print(data1)
+                    #待存入数据库
+                elif request.form.get("x2"):
+                    data2 = request.form.get("x2")
+                    data1 = BI.Commodity_composition_Decode(cateID,shopID,data2, date)
+                elif request.form.get("x3"):
+                    data3 = request.form.get("x3")
+                    data1 = BI.Commodity_composition_Decode(cateID,shopID,data3, date)
+                elif request.form.get("x4"):
+                    data4 = request.form.get("x4")
+                    data1 = BI.Commodity_composition_Decode(cateID,shopID,data4, date)
+                elif request.form.get("x5"):
+                    data5 = request.form.get("x5")
+                    data1 = BI.Trend_of_competition_product_Decode(cateID,shopID,data5, date)
+        except:
+            return render_template("Error.html")
         return render_template("Race_shop.html",dates=dates,shop_ip=shop_ip)
 
 #竞品分析
@@ -443,32 +418,20 @@ def Competing_goodsviews():
 @app.route("/goods2",methods=["POST","GET"])
 def goods_views():
     if request.method=="POST":
-
         try:
             if request.form.get("data1") or request.form.get("data2") or request.form.get("data3") or request.form.get("data4") or request.form.get("data5") or request.form.get("data6") or request.form.get("data7") or request.form.get("data8") or request.form.get("data9") or request.form.get("data10") or request.form.get("data11") or request.form.get("data12") or request.form.get("data13"):
 
                 for x in range(1,14):
-
-                    print(x)
                     #提取cateID
                     cateID = session.get('cateID')
-                    print(cateID)
                     #提取ID
                     itemID = session.get("itemID")
                     #提取时间值
-
                     times = request.form.get("time"+str(x))
-
                     #提取框内值
                     if request.form.get("data"+str(x)):
                         datas = request.form.get("data"+str(x))
-                        print(itemID)
-                        print(cateID)
-
-                        print(times)
-                        print(datas)
                         data = BI.Source_of_entry_product_Decode(cateID,itemID,datas,times)
-                        print(data)
 
                         # 交接逻辑 存入数据库
         except:
@@ -652,9 +615,9 @@ if __name__=="__main__":
     # 家里主机IP
     # app.run(debug=True,host="192.168.0.106")
     #项目ip
-    # app.run(debug=True)
+    app.run(debug=True)
     #wife笔记本IP
-    app.run(debug=True,host='192.168.0.103')
+    # app.run(debug=True,host='192.168.0.103')
     #DN
     # app.run(debug=False,host="176.47.2.41")
     # 罗辑(公司)主机IP
