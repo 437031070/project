@@ -315,9 +315,9 @@ def Race_views():
             IPS,cateID,shopID = BI.shop_Commodity_composition(shop_ip,date,dateType)
             session['cateID']=cateID
             session['shopID']=shopID
-            IPS_bag = {}
+            IPS_bag = []
             for x in IPS:
-                IPS_bag[x[0]] = x[1]
+                IPS_bag.append({x[0]:x[1]})
 
         except:
             return render_template("Error.html")
