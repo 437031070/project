@@ -321,6 +321,7 @@ def Race_views():
 
         except:
             return render_template("Error.html")
+
         return render_template("Race_shop.html",dates=dates,IPS=IPS_bag,date=date,shop_ip=shop_ip)
 #提取竞店分析框内值
 @app.route("/addRace_shop",methods=["POST","GET"])
