@@ -623,8 +623,8 @@ def Subindustry_Distribution_show(data,dtype):
     form = np.array(list(set([tuple(t) for t in form])))
     return form
 # 高流量店铺排行
-def Shop_hotsearchc_show():
-    data = Shop_hotsearch.query.all()
+def Shop_hotsearch_show(cateID):
+    data = Shop_hotsearch.query.filter_by(cateID=cateID).all()
     form = []
     for x in data:
         text = []
@@ -642,14 +642,36 @@ def Shop_hotsearchc_show():
         text.append(x.tradeIndex)
         text.append(x.Search)
         text.append(x.Payment_amount)
-        text.append(x.Visito)
+        text.append(x.Visitor)
+        form.append(text)
+    form = np.array(form)
+    return form
+# 高交易店铺排行
+def Shop_hotsale_show(cateID):
+    data = Shop_hotsale.query.filter_by(cateID=cateID).all()
+    form = []
+    for x in data:
+        text = []
+        text.append(x.cateID)
+        text.append(x.Data_module)
+        text.append(x.data_type)
+        text.append(x.date)
+        text.append(x.shop_title)
+        text.append(x.cateRankId)
+        text.append(x.userId)
+        text.append(x.shopUrl)
+        text.append(x.b2CShop)
+        text.append(x.tradeIndex)
+        text.append(x.payRateIndex)
+        text.append(x.Conversion_rate)
+        text.append(x.Payment_amount)
         form.append(text)
     form = np.array(form)
     return form
 
-# 高流量商品排行
-def Item_hotsearchm_show():
-    data = Item_hotsearch.query.all()
+
+def Item_hotsearch_show(cateID):
+    data = Item_hotsearch.query.filter_by(cateID=cateID).all()
     form = []
     for x in data:
         text = []
@@ -674,7 +696,7 @@ def Item_hotsearchm_show():
     form = np.array(form)
     return form
 # 高交易商品排行
-def Item_hotsales_show():
+def Item_hotsale_show():
     data = Item_hotsale.query.all()
     form = []
     for x in data:
@@ -698,7 +720,7 @@ def Item_hotsales_show():
     form = np.array(form)
     return form
 # 高流量品牌排行
-def Brand_hotsearcha_show():
+def Brand_hotsearch_show():
     data = Brand_hotsale.query.all()
     form = []
     for x in data:
@@ -720,7 +742,7 @@ def Brand_hotsearcha_show():
     form = np.array(form)
     return form
 # 高交易品牌排行
-def Brand_hotsalec_show():
+def Brand_hotsale_show():
     data = Brand_hotsale.query.all()
     form = []
     for x in data:
@@ -739,7 +761,7 @@ def Brand_hotsalec_show():
     form = np.array(form)
     return form
 # 热门属性
-def Hot_attributes_show(cateID,dtype):
+def Hot_attribute_show(cateID,dtype):
     if dtype == "cateid":
         print(cateID)
         data = Hot_attributes.query.filter_by(cateID=cateID).all()
@@ -803,7 +825,7 @@ def shop_hotsearch_add(data):
 #高交易店铺排行
 def shop_hotsale_add(data):
     for cow in data:
-        data_cow = Shop_hotsearch(cateID=cow[0], Data_module=cow[1],data_type=cow[2], date=cow[3],shop_title=cow[4], cateRankId=cow[5],userId=cow[6],shopUrl=cow[7],b2CShop=cow[8] ,tradeIndex=cow[9],payRateIndex=cow[10],Conversion_rate=cow[11],Payment_amount=cow[12])
+        data_cow = Shop_hotsale(cateID=cow[0], Data_module=cow[1],data_type=cow[2], date=cow[3],shop_title=cow[4], cateRankId=cow[5],userId=cow[6],shopUrl=cow[7],b2CShop=cow[8] ,tradeIndex=cow[9],payRateIndex=cow[10],Conversion_rate=cow[11],Payment_amount=cow[12])
         db.session.add(data_cow)
     db.session.commit()
 

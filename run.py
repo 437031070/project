@@ -120,8 +120,11 @@ def hn_show():
     else:
         try:
             cateid = request.form.get("cateId")
+            print(cateid,'*'*10)
             Industry_type = request.form.get("Industry_type")
+            print(Industry_type, '*' * 10)
             Industry_type2 = request.form.get("Industry_type2")
+            print(Industry_type2, '*' * 10)
             if Industry_type == "商品":
                 Industry_type = "item"
                 if Industry_type2 == "高交易":
@@ -315,7 +318,7 @@ def Race_views():
             IPS_bag = {}
             for x in IPS:
                 IPS_bag[x[0]] = x[1]
-            print(IPS_bag)
+
         except:
             return render_template("Error.html")
         return render_template("Race_shop.html",dates=dates,IPS=IPS_bag,date=date,shop_ip=shop_ip)
@@ -323,36 +326,60 @@ def Race_views():
 @app.route("/addRace_shop",methods=["POST","GET"])
 def addRace_shop_views():
     if request.method == "POST":
-        try:
-
-            shop_ip=session.get("shop_ip")
-            dates = ["最近30天"]
-            date_name = BI.one_year_enerator()
-            for date in date_name:
-                dates.append(date[0])
-            date = session.get("date")
-            cateID = session.get['cateID']
-            shopID = session.get['shopID']
-            if request.form.get("x1") or request.form.get("x2") or request.form.get("x3") or request.form.get("x4") or request.form.get("x5"):
-                if request.form.get("x1"):
-                    data1=request.form.get("x1")
-                    data1=BI.Commodity_composition_Decode(cateID,shopID,data1,date)
-                    print(data1)
-                    #待存入数据库
-                elif request.form.get("x2"):
-                    data2 = request.form.get("x2")
-                    data1 = BI.Commodity_composition_Decode(cateID,shopID,data2, date)
-                elif request.form.get("x3"):
-                    data3 = request.form.get("x3")
-                    data1 = BI.Commodity_composition_Decode(cateID,shopID,data3, date)
-                elif request.form.get("x4"):
-                    data4 = request.form.get("x4")
-                    data1 = BI.Commodity_composition_Decode(cateID,shopID,data4, date)
-                elif request.form.get("x5"):
-                    data5 = request.form.get("x5")
-                    data1 = BI.Trend_of_competition_product_Decode(cateID,shopID,data5, date)
-        except:
-            return render_template("Error.html")
+        # try:
+        shop_ip=session.get("shop_ip")
+        dates = ["最近30天"]
+        date_name = BI.one_year_enerator()
+        for date in date_name:
+            dates.append(date[0])
+        date = session.get("date")
+        cateID = session.get('cateID')
+        shopID = session.get('shopID')
+        if request.form.get("x1") or request.form.get("x2") or request.form.get("x3") or request.form.get("x4") or request.form.get("x5"):
+            if request.form.get("x1"):
+                data1=request.form.get("x1")
+                data1=BI.Commodity_composition_Decode(cateID,shopID,data1,date)
+                # print(data1)
+                #待存入数据库
+            elif request.form.get("x2"):
+                print(2)
+                data2 = request.form.get("x2")
+                print('this_data2',data2,'*'*20)
+                print('this_cateID',cateID,'*'*20)
+                print('this_shopID',shopID,'*'*20)
+                print('this_date',date,'*'*20)
+                #罗辑 负责部分出错  四个参数都有值，data1没有取到----BI出错
+                data1 = BI.Commodity_composition_Decode(cateID,shopID,data2, date)
+                print(data1,'data1','*'*30)
+            elif request.form.get("x3"):
+                print(3)
+                data3 = request.form.get("x3")
+                print('this_data3', data3, '*' * 20)
+                print('this_cateID', cateID, '*' * 20)
+                print('this_shopID', shopID, '*' * 20)
+                print('this_date', date, '*' * 20)
+                # 罗辑 负责部分出错  四个参数都有值，data1没有取到----BI出错
+                data1 = BI.Commodity_composition_Decode(cateID,shopID,data3, date)
+            elif request.form.get("x4"):
+                print(4)
+                data4 = request.form.get("x4")
+                print('this_data4', data4, '*' * 20)
+                print('this_cateID', cateID, '*' * 20)
+                print('this_shopID', shopID, '*' * 20)
+                print('this_date', date, '*' * 20)
+                # 罗辑 负责部分出错  四个参数都有值，data1没有取到----BI出错
+                data1 = BI.Commodity_composition_Decode(cateID,shopID,data4, date)
+            elif request.form.get("x5"):
+                print(5)
+                data5 = request.form.get("x5")
+                print('this_data5', data5, '*' * 20)
+                print('this_cateID', cateID, '*' * 20)
+                print('this_shopID', shopID, '*' * 20)
+                print('this_date', date, '*' * 20)
+                # 罗辑 负责部分出错  四个参数都有值，data1没有取到----BI出错
+                data1 = BI.Trend_of_competition_product_Decode(cateID,shopID,data5, date)
+        # except:
+        #     return render_template("Error.html")
         return render_template("Race_shop.html",dates=dates,shop_ip=shop_ip)
 
 #竞品分析
@@ -375,9 +402,10 @@ def Competing_goods_views():
                 text[cow[1]] = cow[2]
                 text[cow[3]] = cow[4]
                 words.append(text)
-            print(words)
+            # print(words)
         except:
             return render_template("Error.html")
+
         return render_template("Competing_goods.html",words=words)
 
 #接受 竞品60条数据
@@ -388,8 +416,8 @@ def Competing_views():
             for x in range(1,61):
                 if request.form.get("x"+str(x)):
                     data = request.form.get("x"+str(x))
-                    cate_ID = session.get['cate_ID']
-                    item_ID = session.get['item_ID']
+                    cate_ID = session.get('cate_ID')
+                    item_ID = session.get('item_ID')
                     data = BI.Keyword_competition_Decode(data,cate_ID,item_ID)
                     #待传入数据库
         except:
@@ -624,9 +652,9 @@ if __name__=="__main__":
     # 家里主机IP
     # app.run(debug=True,host="192.168.0.106")
     #项目ip
-    app.run(debug=True)
+    # app.run(debug=True)
     #wife笔记本IP
-    # app.run(debug=True,host='192.168.0.103')
+    app.run(debug=True,host='192.168.0.103')
     #DN
     # app.run(debug=False,host="176.47.2.41")
     # 罗辑(公司)主机IP
