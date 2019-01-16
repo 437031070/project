@@ -62,7 +62,7 @@ def Industry_trend_cleaning(name):
 def Hot_attributes(cateid):
     print(cateid)
     # Hot_attributes_show(data, dtype)
-    Hot_attributes_data = Hot_attributes_show(cateid, "cateid")
+    Hot_attributes_data = Hot_attribute_show(cateid, "cateid")
     title = Hot_attributes_data[::,2]
     title = set(title)
     data = {}
